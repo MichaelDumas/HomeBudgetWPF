@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Budget;
+using System.IO;
 
 namespace WPF
 {
@@ -23,6 +24,21 @@ namespace WPF
     {
         public MainWindow()
         {
+            if(!File.Exists("./config.txt"))
+            {
+                FirstSetupWindow setup = new FirstSetupWindow();
+                setup.ShowDialog();
+                if(!File.Exists("./config.txt"))
+                    this.Close();
+            }
+            else
+            {
+                string filepath;
+                StreamReader streamReader = new StreamReader("./config.txt");
+                filepath = streamReader.ReadLine();
+                filepath += "\\" + streamReader.ReadLine();
+                HomeBudget budget = new HomeBudget(filepath, false);
+            }
             InitializeComponent();
 
         }
