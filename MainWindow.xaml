@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="300" Width="700">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="HomeBudget" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="64" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="© BigOof Corp. 2021" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Center"></TextBlock>
+        <Button x:Name="btnAddCat" Grid.Row="2" Grid.Column="2" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">Add Category</Button>
+        <Button x:Name="btnAddExp" Grid.Row="2" Grid.Column="0" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">Add Expense</Button>
     </Grid>
 </Window>

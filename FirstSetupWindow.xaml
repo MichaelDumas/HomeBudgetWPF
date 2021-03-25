@@ -1,0 +1,29 @@
+﻿<Window x:Class="WPF.FirstSetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF"
+        mc:Ignorable="d"
+        Title="FirstSetupWindow" Height="300" Width="500"
+        Background="MintCream">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="HomeBudget Setup" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Budget file name:" Grid.Row="1" Grid.Column="0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Right"></TextBlock>
+        <TextBox x:Name="txtbFile" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+        <TextBlock Text="Budget file directory:" Grid.Row="1" Grid.Column="0" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
+        <Button x:Name="btnBrowse" Grid.Row="1" Grid.Column="2" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="5" Click="btnBrowse_Click" Margin="76,0,0,0">Browse</Button>
+        <TextBox x:Name="txtbDir" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
+        <Button x:Name="btnSaveConfig" Grid.Row="2" Grid.Column="2" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Click="btnSaveConfig_Click" Margin="17,0,0,0">Start HomeBudget</Button>
+    </Grid>
+</Window>
