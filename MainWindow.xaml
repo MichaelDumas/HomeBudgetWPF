@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <TextBlock Text="HomeBudget" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="64" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
         <TextBlock Text="© BigOof Corp. 2021" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Center"></TextBlock>
-        <Button x:Name="btnAddCat" Grid.Row="2" Grid.Column="2" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">Add Category</Button>
-        <Button x:Name="btnAddExp" Grid.Row="2" Grid.Column="0" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">Add Expense</Button>
+        <Button x:Name="btnAddCat" Grid.Row="2" Grid.Column="2" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10" Click="btnAddCat_Click">Add Category</Button>
+        <Button x:Name="btnAddExp" Grid.Row="2" Grid.Column="0" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10" Click="btnAddExp_Click">Add Expense</Button>
     </Grid>
 </Window>
