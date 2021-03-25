@@ -22,25 +22,18 @@ namespace WPF
     /// </summary>
     public partial class AddCategoryWindow : Window
     {
-<<<<<<< Updated upstream
         private HomeBudget budget;
-        private string fileName = "C:\\sqlite\\testDBInput.db";
 
         public AddCategoryWindow()
         {
             InitializeComponent();
-            budget = new HomeBudget(fileName);
             initComboBox();
         }
 
         public AddCategoryWindow(HomeBudget homeBudget)
         {
-            budget = homeBudget;
-=======
-        public AddCategoryWindow()
-        {
             InitializeComponent();
->>>>>>> Stashed changes
+            budget = homeBudget;
             initComboBox();
         }
 
@@ -55,9 +48,8 @@ namespace WPF
         private void btnAddCategory_Click(object sender, RoutedEventArgs e)
         {
             string description = Description.Text;
-            int typeId = TypeId.SelectedIndex;
+            int typeId = TypeId.SelectedIndex + 1;
 
-<<<<<<< Updated upstream
             // validate description and category
             if (description == "" || typeId == -1)
             {
@@ -77,31 +69,11 @@ namespace WPF
                 MessageBox.Show(exception.Message, "Category could not be added", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             Close();
-=======
-            // validate description
-            // validate category
-
-            if (description == "" || typeId == -1)
-            {
-                MessageBox.Show("Description and TypeId cannot be blank", "Oops", MessageBoxButton.OK, MessageBoxImage.Hand);
-                return;
-            }
-
-
-            // add it to the database
-            string fileName = "C:\\sqlite\\testDBInput.db";
-            HomeBudget budget = new HomeBudget(fileName);
-            budget.categories.Add(description, (Category.CategoryType)typeId);
->>>>>>> Stashed changes
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< Updated upstream
             Close();
-=======
-            this.Close();
->>>>>>> Stashed changes
         }
     }
 }

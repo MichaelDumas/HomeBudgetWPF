@@ -22,6 +22,7 @@ namespace WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        public HomeBudget budget;
         public MainWindow()
         {
             if(!File.Exists("./config.txt"))
@@ -37,10 +38,27 @@ namespace WPF
                 StreamReader streamReader = new StreamReader("./config.txt");
                 filepath = streamReader.ReadLine();
                 filepath += "\\" + streamReader.ReadLine();
-                HomeBudget budget = new HomeBudget(filepath, false);
+                streamReader.Close();
+                budget = new HomeBudget(filepath, false);
             }
             InitializeComponent();
 
+        }
+        public void CloseDatabase()
+        {
+            budget.CloseDB();
+        }
+
+        private void btnAddExp_Click(object sender, RoutedEventArgs e)
+        {
+            AddExpenseWindow expenseWindow = new AddExpenseWindow(budget);
+            expenseWindow.ShowDialog();
+        }
+
+        private void btnAddCat_Click(object sender, RoutedEventArgs e)
+        {
+            AddCategoryWindow categoryWindow = new AddCategoryWindow(budget);
+            categoryWindow.ShowDialog();
         }
     }
 }

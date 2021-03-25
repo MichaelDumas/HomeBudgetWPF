@@ -31,17 +31,14 @@ namespace WPF
 
             dpDate.SelectedDate = defaultDateTime;
 
-            string hardCodedFileName = "C:\\sqlite\\testDBInput.db";
-            HomeBudget hardCodedHB = new HomeBudget(hardCodedFileName);
-
-            _homeBudget = hardCodedHB;
             PopulateComboBox();
 
         }
 
         public AddExpenseWindow(HomeBudget homeBudget)
         {
-            dpDate.SelectedDate = defaultDateTime;
+            InitializeComponent();
+            dpDate.SelectedDate = DateTime.Now;
             _homeBudget = homeBudget;
             PopulateComboBox();
         }
