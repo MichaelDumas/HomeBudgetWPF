@@ -23,6 +23,7 @@ namespace WPF
     /// </summary>
     public partial class FirstSetupWindow : Window
     {
+        public HomeBudget budget { get; set; }
         public FirstSetupWindow()
         {
             InitializeComponent();
@@ -44,7 +45,7 @@ namespace WPF
             try
             {
                 string databaseFile = txtbDir.Text + "\\\\" + txtbFile.Text + ".db";
-                HomeBudget budget = new HomeBudget(databaseFile, true);
+                budget = new HomeBudget(databaseFile, true);
             }
             catch (Exception error)
             {
