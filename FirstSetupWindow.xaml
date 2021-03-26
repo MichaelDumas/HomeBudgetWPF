@@ -18,7 +18,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="HomeBudget Setup" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Create HomeBudget File" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="32" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
         <TextBlock Text="Budget file name:" Grid.Row="1" Grid.Column="0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Right"></TextBlock>
         <TextBox x:Name="txtbFile" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0"></TextBox>
         <TextBlock Text="Budget file directory:" Grid.Row="1" Grid.Column="0" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>

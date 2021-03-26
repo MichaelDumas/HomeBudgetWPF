@@ -22,7 +22,7 @@ namespace WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public HomeBudget budget;
+        public HomeBudget budget { get; set; }
         public MainWindow()
         {
             if(!File.Exists("./config.txt"))
@@ -31,22 +31,18 @@ namespace WPF
                 setup.ShowDialog();
                 if(!File.Exists("./config.txt"))
                     this.Close();
+                budget = setup.budget;
             }
             else
             {
-                string filepath;
-                StreamReader streamReader = new StreamReader("./config.txt");
-                filepath = streamReader.ReadLine();
-                filepath += "\\" + streamReader.ReadLine();
-                streamReader.Close();
-                budget = new HomeBudget(filepath, false);
+                OpenFile open = new OpenFile();
+                open.ShowDialog();
+                if (open.budget is null)
+                    this.Close();
+                budget = open.budget;            
             }
             InitializeComponent();
 
-        }
-        public void CloseDatabase()
-        {
-            budget.CloseDB();
         }
 
         private void btnAddExp_Click(object sender, RoutedEventArgs e)
@@ -59,6 +55,11 @@ namespace WPF
         {
             AddCategoryWindow categoryWindow = new AddCategoryWindow(budget);
             categoryWindow.ShowDialog();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            budget.CloseDB();
         }
     }
 }
