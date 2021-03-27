@@ -28,7 +28,7 @@
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Payment Method: " Margin="10 5"/>
         <DockPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center">
             <RadioButton x:Name="rdbCredit" GroupName="paymentMethod" Margin="20 5">Credit Card</RadioButton>
-            <RadioButton GroupName="paymentMethod" Margin="20 5">Other</RadioButton>
+            <RadioButton x:Name="rdbOther" GroupName="paymentMethod" Margin="20 5">Other</RadioButton>
             
         </DockPanel>
 

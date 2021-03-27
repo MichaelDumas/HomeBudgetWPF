@@ -24,6 +24,7 @@ namespace WPF
 
         private HomeBudget _homeBudget;
         private DateTime defaultDateTime = DateTime.Now;
+        private List<Category> categories;
 
         public AddExpenseWindow()
         {
@@ -40,6 +41,7 @@ namespace WPF
             InitializeComponent();
             dpDate.SelectedDate = DateTime.Now;
             _homeBudget = homeBudget;
+            _homeBudget = new HomeBudget("C:\\sqlite\\testDBInput.db"); //DELETE THIS
             PopulateComboBox();
         }
 
@@ -47,7 +49,9 @@ namespace WPF
         {
             //populates combobox from the list of categories gotten from the home budget
             cmbCategory.DisplayMemberPath = "Description";
-            cmbCategory.ItemsSource = _homeBudget.categories.List();
+            categories = _homeBudget.categories.List();
+            cmbCategory.ItemsSource = categories;
+            cmbCategory.SelectedIndex = 1;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -65,25 +69,51 @@ namespace WPF
                 Category cat = (Category) cmbCategory.SelectedItem;
                 double.TryParse(txtAmount.Text, out double amount);
                 string description = txtDescription.Text;
+                String categoryType = nameof(cat.Type).ToLower();
+
+                if(amount > 0 && (categoryType == "expense" || categoryType == "savings"))
+                {
+                    amount *= -1;
+                }
 
                 //in a try catch to catch any throws thrown by the homebudget or the database
                 try
                 {
                     //if paid with credit card adds the expense twice
                     if (rdbCredit.IsChecked.Value)
-                        _homeBudget.expenses.Add(date, cat.Id, -amount, description);
+                    {
+                        foreach (Category c in categories)
+                        {
+                            if (c.Description == "credit card")
+                            {
+                                Category creditCardCategory = c;
+                                _homeBudget.expenses.Add(date, creditCardCategory.Id, -amount, description);
+                                break;
+                            }
+                        }
+                        //_homeBudget.expenses.Add(date, cat.Id, -amount, description);
+                    }
 
                     //adds the expense shows a message and closes the window
                     _homeBudget.expenses.Add(date, cat.Id, amount, description);
                     MessageBox.Show("Expense was added successfully to the database", "EXPENSE ADDED", MessageBoxButton.OK);
-                    Close();
+                    ClearForm();
+                    //Close();
                 }
                 catch(Exception exception)
                 {
                     MessageBox.Show(exception.Message, "EXPENSE COULD NOT BE ADDED", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                Close();
+                //Close();
             }
+        }
+        
+        private void ClearForm()
+        {
+            txtAmount.Text = null;
+            txtDescription.Text = null;
+            rdbCredit.IsChecked = false;
+            rdbOther.IsChecked = false;
         }
 
         private bool ValidExpense()
