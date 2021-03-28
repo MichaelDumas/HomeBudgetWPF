@@ -22,7 +22,6 @@ namespace WPF
     /// </summary>
     public partial class AddCategoryWindow : Window
     {
-<<<<<<< Updated upstream
         private HomeBudget budget;
         private string fileName = "C:\\sqlite\\testDBInput.db";
 
@@ -36,13 +35,8 @@ namespace WPF
         public AddCategoryWindow(HomeBudget homeBudget)
         {
             budget = homeBudget;
-=======
-        public AddCategoryWindow()
-        {
-            InitializeComponent();
->>>>>>> Stashed changes
-            initComboBox();
         }
+
 
         private void initComboBox()
         {
@@ -57,7 +51,6 @@ namespace WPF
             string description = Description.Text;
             int typeId = TypeId.SelectedIndex;
 
-<<<<<<< Updated upstream
             // validate description and category
             if (description == "" || typeId == -1)
             {
@@ -76,32 +69,18 @@ namespace WPF
             {
                 MessageBox.Show(exception.Message, "Category could not be added", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            Close();
-=======
-            // validate description
-            // validate category
 
-            if (description == "" || typeId == -1)
-            {
-                MessageBox.Show("Description and TypeId cannot be blank", "Oops", MessageBoxButton.OK, MessageBoxImage.Hand);
-                return;
-            }
-
-
-            // add it to the database
-            string fileName = "C:\\sqlite\\testDBInput.db";
-            HomeBudget budget = new HomeBudget(fileName);
-            budget.categories.Add(description, (Category.CategoryType)typeId);
->>>>>>> Stashed changes
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< Updated upstream
             Close();
-=======
-            this.Close();
->>>>>>> Stashed changes
+        }
+
+        private void Clear(object sender, RoutedEventArgs e)
+        {
+            Description.Text = "";
+            Close();
         }
     }
 }
