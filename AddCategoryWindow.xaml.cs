@@ -23,19 +23,20 @@ namespace WPF
     public partial class AddCategoryWindow : Window
     {
         private HomeBudget budget;
+        private string fileName = "C:\\sqlite\\testDBInput.db";
 
         public AddCategoryWindow()
         {
             InitializeComponent();
+            budget = new HomeBudget(fileName);
             initComboBox();
         }
 
         public AddCategoryWindow(HomeBudget homeBudget)
         {
-            InitializeComponent();
             budget = homeBudget;
-            initComboBox();
         }
+
 
         private void initComboBox()
         {
@@ -48,7 +49,7 @@ namespace WPF
         private void btnAddCategory_Click(object sender, RoutedEventArgs e)
         {
             string description = Description.Text;
-            int typeId = TypeId.SelectedIndex + 1;
+            int typeId = TypeId.SelectedIndex;
 
             // validate description and category
             if (description == "" || typeId == -1)
@@ -68,11 +69,17 @@ namespace WPF
             {
                 MessageBox.Show(exception.Message, "Category could not be added", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            Close();
+
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            Close();
+        }
+
+        private void Clear(object sender, RoutedEventArgs e)
+        {
+            Description.Text = "";
             Close();
         }
     }
