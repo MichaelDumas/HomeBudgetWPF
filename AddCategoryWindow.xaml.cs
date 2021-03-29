@@ -34,7 +34,9 @@ namespace WPF
 
         public AddCategoryWindow(HomeBudget homeBudget)
         {
+            InitializeComponent();
             budget = homeBudget;
+            initComboBox();
         }
 
 
@@ -49,7 +51,7 @@ namespace WPF
         private void btnAddCategory_Click(object sender, RoutedEventArgs e)
         {
             string description = Description.Text;
-            int typeId = TypeId.SelectedIndex;
+            int typeId = TypeId.SelectedIndex + 1;
 
             // validate description and category
             if (description == "" || typeId == -1)
