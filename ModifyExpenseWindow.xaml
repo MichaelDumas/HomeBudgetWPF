@@ -1,0 +1,47 @@
+﻿<Window x:Class="WPF.ModifyExpenseWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF"
+        mc:Ignorable="d"
+        Title="Modify Expense" Height="325" Width="425">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- Amount -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Amount: " Margin="10"/>
+        <TextBox x:Name="txtAmount" Grid.Row="0" Grid.Column="1" Margin=" 0 10"/>
+        
+
+        <!-- Description -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Description: " Margin="10"/>
+        <TextBox Name="txtDescription" Grid.Row="2" Grid.Column="1" Margin="0 10"/>
+
+        <!-- Category -->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Category: " Margin="10"/>
+        <ComboBox x:Name="cmbCategory" Grid.Row="3" Grid.Column="1"  Margin="0 5"/>
+
+        <!-- Date -->
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Date: " Margin="10"/>
+        <DatePicker x:Name="dpDate" Grid.Row="4" Grid.Column="1" Margin="5"/>
+
+        <DockPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <Button x:Name="btnDelete" Click="btnDelete_Click" Content="Delete" Height="25" Width="100" Margin="10 5"/>
+            <Button x:Name="btnClose" Click="btnClose_Click" Content="Cancel" Height="25" Width="100" Margin="10 5"/>
+            <Button x:Name="btnModify" Click="btnModify_Click" Content="Modify Expense"  Height="25" Width="100" Margin="10 5"/>
+        </DockPanel>
+
+    </Grid>
+</Window>
