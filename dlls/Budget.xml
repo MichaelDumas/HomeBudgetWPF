@@ -111,11 +111,13 @@
             <see cref="T:Budget.Category.CategoryType"/></param>
             <exception cref="T:System.Data.SQLite.SQLiteException">If the database file is corrupted in any way</exception>
         </member>
-        <member name="M:Budget.Categories.UpdateProperties(Budget.Category)">
+        <member name="M:Budget.Categories.UpdateProperties(System.Int32,System.String,Budget.Category.CategoryType)">
             <summary>
             Modify an existing category
             </summary>
-            <param name="category">The <c>Category</c> object to be modified</param>
+            <param name="id">Category Id</param>
+            <param name="description">Category Description</param>
+            <param name="type">A type of category. </param>
             <exception cref="T:System.Data.SQLite.SQLiteException">If the database file is corrupted in any way</exception>
         </member>
         <member name="M:Budget.Categories.Delete(System.Int32)">
@@ -234,11 +236,15 @@
             <exception cref="T:System.Data.SQLite.SQLiteException">If the category ID is not valid,
             then there will be a foreign key constraint error</exception>
         </member>
-        <member name="M:Budget.Expenses.UpdateProperties(Budget.Expense)">
+        <member name="M:Budget.Expenses.UpdateProperties(System.Int32,System.DateTime,System.Int32,System.Double,System.String)">
             <summary>
             Modify an existing expense
             </summary>
-            <param name="expense">The expense object to be modified</param>
+            <param name="expenseId">Date the expense was incurred</param>
+            <param name="date">Date the expense was incurred</param>
+            <param name="categoryId">ID of the category where this expense belongs</param>
+            <param name="amount">The amount of the expense</param>
+            <param name="description">The description of the expense </param>
             <exception cref="T:System.Data.SQLite.SQLiteException">If the database file is corrupted in any way</exception>
         </member>
         <member name="M:Budget.Expenses.Delete(System.Int32)">
