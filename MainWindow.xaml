@@ -36,18 +36,18 @@
             <GroupBox Header="Filter" Grid.Row="1" FontSize="15" Margin="5 0">
                 <StackPanel>
                     <TextBlock Text="Start Date" Margin="0 5 0 0"/>
-                    <DatePicker x:Name="dpStart" Margin="0 0 0 10"/>
+                    <DatePicker x:Name="dpStart" SelectedDateChanged="dpSelectedDateChanged"  Margin="0 0 0 10"/>
                     <TextBlock Text="End Date"/>
-                    <DatePicker x:Name="dpEnd" Margin="0 0 0 10"/>
-                    <CheckBox x:Name="filter" Content="Filter by category?"/>
-                    <ComboBox x:Name="cmbCategory" Margin="0 0 0 10"/>
+                    <DatePicker x:Name="dpEnd" SelectedDateChanged="dpSelectedDateChanged" Margin="0 0 0 10"/>
+                    <CheckBox x:Name="filter" Content="Filter by category?" Checked="UpdateDataGrid" Unchecked="UpdateDataGrid"/>
+                    <ComboBox x:Name="cmbCategory" SelectionChanged="cmbCategory_SelectionChanged" Margin="0 0 0 10"/>
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Header="Summary" Grid.Row="2" FontSize="15" Margin="5 0">
                 <StackPanel>
-                    <CheckBox Name="ByMonth" Click="btnByMonth_Click" Content="By month" Margin="0 3"/>
-                    <CheckBox Name="ByCategory" Click="btnByCategory_Click" Content="By category" Margin="0 3"/>
+                    <CheckBox Name="ByMonth" Checked="UpdateDataGrid" Unchecked="UpdateDataGrid" Content="By month" Margin="0 3"/>
+                    <CheckBox Name="ByCategory" Checked="UpdateDataGrid" Unchecked="UpdateDataGrid"  Content="By category" Margin="0 3"/>
                 </StackPanel>
             </GroupBox>
 
@@ -61,22 +61,7 @@
         </Grid>
 
         <!-- Budget Items Data Grid -->
-        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" CanUserAddRows="false" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" >
-            <DataGrid.Resources>
-                <!-- Having CommandParameter allows us to know which expense is being deleted/modify -->
-                <ContextMenu x:Key="ContextMenu" >
-                    <MenuItem Header="Delete" Click="DeleteExpense_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
-                    <MenuItem Header="Modify" Click="ModifyExpense_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
-                    <Separator/>
-                    <MenuItem Header="Cancel" Command="" />
-                </ContextMenu>
-            </DataGrid.Resources>
-            
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" >
-                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
-                </Style>
-            </DataGrid.RowStyle>
+        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" Margin="5">
         </DataGrid>
     </Grid>
 </Window>

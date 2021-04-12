@@ -45,58 +45,23 @@ namespace WPF
 
             InitializeComponent();
             InitializeDataGrid();
+            PopulateComboBox();
 
         }
         private void PopulateComboBox()
         {
             cmbCategory.DisplayMemberPath = "Description";
-            List<Category> categories = budget.categories.List();
-            cmbCategory.ItemsSource = categories;
+            cmbCategory.ItemsSource = budget.categories.List();
             cmbCategory.SelectedIndex = 1;
         }
 
-        private void UpdateDataGrid()
+        private void InitializeDataGrid(DateTime? start = null, DateTime? end = null)
         {
-            DateTime start = (DateTime)dpStart.SelectedDate;
-            DateTime end = (DateTime)dpEnd.SelectedDate;
-            bool filterFlag = (bool)filter.IsChecked;
-            int catId = cmbCategory.SelectedIndex;
+            budgetItemsDataGrid.Columns.Clear();
 
-            //if none are checked
-            if(ByMonth.IsChecked == false && ByCategory.IsChecked == false)
-            {
-
-            }
-
-            // if by month
-            else if (ByMonth.IsChecked == true)
-            {
-
-            }
-            // if by category
-            else if (ByCategory.IsChecked == true)
-            {
-                List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(start, end, filterFlag, catId);
-                DataGridTextColumn catCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(catCol);
-                catCol.Binding = new Binding("Category");
-
-                DataGridTextColumn totalCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(totalCol);
-                totalCol.Binding = new Binding("Total");
-            }
-            // if both
-            else if (ByMonth.IsChecked == true && ByCategory.IsChecked == true)
-            {
-                List<Dictionary<string, object>> budgetItemsByCategoryAndMonth = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, filterFlag, catId);
-            }
-        }
-
-        private void InitializeDataGrid()
-        {
-
-            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(start, end, false, 0);
             budgetItemsDataGrid.ItemsSource = budgetItems;
+            budgetItemsDataGrid.Items.Refresh();
 
 
             DataGridTextColumn dateCol = new DataGridTextColumn();
@@ -129,76 +94,22 @@ namespace WPF
 
         }
 
-        private void btnByMonth_Click(object sender, RoutedEventArgs e)
-        {
-            budgetItemsDataGrid.Columns.Clear();
-
-           // DateTime start = (DateTime)dpStart.SelectedDate;
-            //DateTime end = (DateTime)dpEnd.SelectedDate;
-            bool filterFlag = (bool)filter.IsChecked;
-            int catId = cmbCategory.SelectedIndex;
-
-            if (ByMonth.IsChecked == true && ByCategory.IsChecked == false)
-            {
-                List<BudgetItemsByMonth> budgetItemsByMonth = budget.GetBudgetItemsByMonth(null, null, false, 0);
-                budgetItemsDataGrid.ItemsSource = budgetItemsByMonth;
-
-                DataGridTextColumn monthCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(monthCol);
-                monthCol.Binding = new Binding("Month");
-                monthCol.Header = "Month";
-
-                DataGridTextColumn totalCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(totalCol);
-                totalCol.Binding = new Binding("Total");
-                totalCol.Binding.StringFormat = "$00.00";
-                totalCol.Header = "Total";
-            }
-            else if (ByMonth.IsChecked == true && ByCategory.IsChecked == true)
-            {
-
-            }
-
-        }
-        private void btnByCategory_Click(object sender, RoutedEventArgs e)
-        {
-            budgetItemsDataGrid.Columns.Clear();
-
-            if (ByCategory.IsChecked == true && ByCategory.IsChecked == false)
-            {
-                DateTime start = (DateTime)dpStart.SelectedDate;
-                DateTime end = (DateTime)dpEnd.SelectedDate;
-                bool filterFlag = (bool)filter.IsChecked;
-                int catId = cmbCategory.SelectedIndex;
-
-                List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(start, end, filterFlag, catId);
-                DataGridTextColumn catCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(catCol);
-                catCol.Binding = new Binding("Category");
-
-                DataGridTextColumn totalCol = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(totalCol);
-                totalCol.Binding = new Binding("Total");
-            }
-            else if (ByMonth.IsChecked == true && ByCategory.IsChecked == true)
-            {
-
-            }
-        }
-
         private void btnAddExp_Click(object sender, RoutedEventArgs e)
         {
             AddExpenseWindow expenseWindow = new AddExpenseWindow(budget);
             expenseWindow.ShowDialog();
 
-            // updating the datagrid
-            budgetItemsDataGrid.ItemsSource = budget.GetBudgetItems(null, null, false, 0);
+            // updating the data in datagrid after adding an expense
+            UpdateDataGrid(sender, e);
         }
 
         private void btnAddCat_Click(object sender, RoutedEventArgs e)
         {
             AddCategoryWindow categoryWindow = new AddCategoryWindow(budget);
             categoryWindow.ShowDialog();
+
+            // update the combo box after adding a category
+            cmbCategory.ItemsSource = budget.categories.List();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -206,5 +117,141 @@ namespace WPF
             budget.CloseDB();
         }
 
+        private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // updates the data after combobox selection changed only if the filter is checked
+            if(filter.IsChecked.Value)
+            {
+                UpdateDataGrid(sender, e);
+            }
+        }
+
+        private void UpdateDataGrid(object sender, RoutedEventArgs e)
+        {
+            DateTime? start = dpStart.SelectedDate;
+            DateTime? end = dpEnd.SelectedDate;
+            bool isFilterChecked = filter.IsChecked.Value;
+            int catIdForFilter = -1;
+
+            if (isFilterChecked)
+            {
+                Category category = (Category)cmbCategory.SelectedItem;
+                catIdForFilter = category.Id;
+
+                // if only filter is checked
+                if (!ByMonth.IsChecked.Value && !ByCategory.IsChecked.Value)
+                {
+                    budgetItemsDataGrid.ItemsSource = budget.GetBudgetItems(null, null, isFilterChecked, catIdForFilter);
+                    return;
+                }
+            }
+
+            // if by month and by category checkboxes are checked
+            if (ByMonth.IsChecked.Value && ByCategory.IsChecked.Value)
+            {
+                UpdateToBoth(start, end, isFilterChecked, catIdForFilter);
+                return;
+            }
+
+            // if by month checkbox is checked
+            if (ByMonth.IsChecked.Value)
+            {
+                UpdateToByMonth(start, end, isFilterChecked, catIdForFilter);
+                return;
+            }
+
+            // if by category checkbox is checked
+            if (ByCategory.IsChecked.Value)
+            {
+                UpdateToByCategory(start, end, isFilterChecked, catIdForFilter);
+                return;
+            }
+
+            InitializeDataGrid(start, end);
+        }
+
+        private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
+        {
+            // reset columns, adds necessary columns and set the item source
+            budgetItemsDataGrid.Columns.Clear();
+
+            DataGridTextColumn monthColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(monthColumn);
+            monthColumn.Binding = new Binding("[Month]");
+            monthColumn.Header = "Month";
+
+            // freeze the first column
+            budgetItemsDataGrid.FrozenColumnCount = 1;
+
+            // loop through the categories and add a column for each one
+            foreach (Category category in budget.categories.List())
+            {
+                DataGridTextColumn newColumn = new DataGridTextColumn();
+                budgetItemsDataGrid.Columns.Add(newColumn);
+                newColumn.Binding = new Binding("[" + category.Description + "]");
+                newColumn.Binding.StringFormat = "$00.00";
+                newColumn.Header = category.Description;
+            }
+
+            DataGridTextColumn totalColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(totalColumn);
+            totalColumn.Binding = new Binding("[Total]");
+            totalColumn.Binding.StringFormat = "$00.00";
+            totalColumn.Header = "Total";
+
+            budgetItemsDataGrid.ItemsSource = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, isFilterChecked, catIdForFilter);
+        }
+
+        private void UpdateToByMonth(DateTime? start, DateTime? end, bool filter, int catId)
+        {
+            // reset columns, adds necessary columns and set the item source
+            budgetItemsDataGrid.Columns.Clear();
+
+            DataGridTextColumn monthColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(monthColumn);
+            monthColumn.Binding = new Binding("Month");
+            monthColumn.Header = "Month";
+
+            DataGridTextColumn totalColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(totalColumn);
+            totalColumn.Binding = new Binding("Total");
+            totalColumn.Binding.StringFormat = "$00.00";
+            totalColumn.Header = "Total";
+
+            budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByMonth(start, end, filter, catId);
+
+        }
+
+        private void UpdateToByCategory(DateTime? start, DateTime? end, bool filter, int catId)
+        {
+            // reset columns, adds necessary columns and set the item source
+            budgetItemsDataGrid.Columns.Clear();
+
+            DataGridTextColumn categoryTotal = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(categoryTotal);
+            categoryTotal.Binding = new Binding("Category");
+            categoryTotal.Header = "Category";
+
+            DataGridTextColumn totalColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(totalColumn);
+            totalColumn.Binding = new Binding("Total");
+            totalColumn.Binding.StringFormat = "$00.00";
+            totalColumn.Header = "Total";
+
+            budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByCategory(start, end, filter, catId);
+        }
+
+        private void dpSelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // message pops up if start date is after end date and datagrid doesn't update
+            if(dpStart.SelectedDate.HasValue && dpEnd.SelectedDate.HasValue && (dpStart.SelectedDate.Value > dpEnd.SelectedDate.Value))
+            {
+                MessageBox.Show("End date cannot be after start date \nTable not updated \nEnter a valid start and end date to update the table", "INVALID DATES", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                UpdateDataGrid(sender, e);
+            }
+        }
     }
 }
