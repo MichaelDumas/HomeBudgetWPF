@@ -30,16 +30,22 @@ namespace WPF
             {
                 FirstSetupWindow setup = new FirstSetupWindow();
                 setup.ShowDialog();
-                if(!File.Exists("./config.txt"))
-                    this.Close();
                 budget = setup.budget;
+                if (!File.Exists("./config.txt") || budget is null)
+                {
+                    this.Close();
+                    return;
+                }
             }
             else
             {
                 OpenFile open = new OpenFile();
                 open.ShowDialog();
                 if (open.budget is null)
+                {
                     this.Close();
+                    return;
+                }
                 budget = open.budget;            
             }
 
@@ -110,6 +116,47 @@ namespace WPF
 
             // update the combo box after adding a category
             cmbCategory.ItemsSource = budget.categories.List();
+        }
+
+        private void DeleteExpense_Click(object sender, RoutedEventArgs e)
+        {
+            // Only allow user to delete if the datagrid is showing all unfiltered budget items
+            if(ByMonth.IsChecked == true || ByCategory.IsChecked == true)
+            {
+                return;
+            }
+
+            int expenseId = ((BudgetItem)budgetItemsDataGrid.SelectedItem).ExpenseID;
+            budget.expenses.Delete(expenseId);
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            budgetItemsDataGrid.ItemsSource = budgetItems;
+        }
+
+        private void ModifyExpense_Click(object sender, RoutedEventArgs e)
+        {
+            // Only allow user to modify if the datagrid is showing all unfiltered budget items
+            if (ByMonth.IsChecked == true || ByCategory.IsChecked == true)
+            {
+                return;
+            }
+
+            int expenseId = ((BudgetItem)budgetItemsDataGrid.SelectedItem).ExpenseID;
+            Expense expense = null;
+            List<Expense> expenses = budget.expenses.List();
+            foreach(Expense exp in expenses)
+            {
+                if (exp.Id == expenseId)
+                {
+                    expense = exp;
+                }
+            }
+
+
+            ModifyExpenseWindow modifyWindow = new ModifyExpenseWindow(budget, expense);
+            modifyWindow.ShowDialog();
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            budgetItemsDataGrid.ItemsSource = budgetItems;
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -253,5 +300,10 @@ namespace WPF
                 UpdateDataGrid(sender, e);
             }
         }
+
+
+
+
+
     }
 }

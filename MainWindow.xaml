@@ -61,7 +61,21 @@
         </Grid>
 
         <!-- Budget Items Data Grid -->
-        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" Margin="5">
+        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" CanUserAddRows="false" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" >
+            <DataGrid.Resources>
+                <ContextMenu x:Key="ContextMenu" x:Name="Context" >
+                    <MenuItem x:Name="menuDelete" Header="Delete" Click="DeleteExpense_Click"  />
+                    <MenuItem x:Name="menuModify" Header="Modify" Click="ModifyExpense_Click"  />
+                    <Separator/>
+                    <MenuItem Header="Cancel" />
+                </ContextMenu>
+            </DataGrid.Resources>
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" >
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </Window>
