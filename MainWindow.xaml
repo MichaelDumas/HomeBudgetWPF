@@ -61,9 +61,22 @@
         </Grid>
 
         <!-- Budget Items Data Grid -->
-        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" >
-            <DataGrid.Columns>
-            </DataGrid.Columns>
+        <DataGrid x:Name="budgetItemsDataGrid" BorderBrush="Black" BorderThickness="3" CanUserAddRows="false" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" >
+            <DataGrid.Resources>
+                <!-- Having CommandParameter allows us to know which expense is being deleted/modify -->
+                <ContextMenu x:Key="ContextMenu" >
+                    <MenuItem Header="Delete" Click="DeleteExpense_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                    <MenuItem Header="Modify" Click="ModifyExpense_Click" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                    <Separator/>
+                    <MenuItem Header="Cancel" Command="" />
+                </ContextMenu>
+            </DataGrid.Resources>
+            
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" >
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </Window>
