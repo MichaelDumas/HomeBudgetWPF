@@ -34,6 +34,7 @@ namespace WPF
             InitializeComponent();
             dpDate.SelectedDate = _expense.Date;
             txtAmount.Text = _expense.Amount.ToString();
+            txtDescription.Text = _expense.Description;
             PopulateComboBox();
         }
 
@@ -44,8 +45,7 @@ namespace WPF
             cmbCategory.DisplayMemberPath = "Description";
             categories = _homeBudget.categories.List();
             cmbCategory.ItemsSource = categories;
-            cmbCategory.SelectedIndex = 1;
-            cmbCategory.SelectedItem = _expense.Category;
+            cmbCategory.SelectedIndex = _expense.Category - 1;
         }
 
         //This method closes the window when the user clicks the cancel button
@@ -78,7 +78,7 @@ namespace WPF
                     //modifies the expense shows a message and closes the window
                     _homeBudget.expenses.UpdateProperties(_expense.Id, date, cat.Id, amount, description);
                     MessageBox.Show("Expense was updated successfully", "EXPENSE UPDATED", MessageBoxButton.OK);
-                    ClearForm();
+                    this.Close();
                 }
                 catch(Exception exception)
                 {

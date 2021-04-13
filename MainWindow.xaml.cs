@@ -30,16 +30,22 @@ namespace WPF
             {
                 FirstSetupWindow setup = new FirstSetupWindow();
                 setup.ShowDialog();
-                if(!File.Exists("./config.txt"))
-                    this.Close();
                 budget = setup.budget;
+                if (!File.Exists("./config.txt") || budget is null)
+                {
+                    this.Close();
+                    return;
+                }
             }
             else
             {
                 OpenFile open = new OpenFile();
                 open.ShowDialog();
                 if (open.budget is null)
+                {
                     this.Close();
+                    return;
+                }
                 budget = open.budget;            
             }
 
@@ -55,11 +61,11 @@ namespace WPF
             cmbCategory.SelectedIndex = 1;
         }
 
-        private void InitializeDataGrid(DateTime? start = null, DateTime? end = null)
+        private void InitializeDataGrid(DateTime? start = null, DateTime? end = null, bool isFiltered = false, int catId = -1)
         {
             budgetItemsDataGrid.Columns.Clear();
 
-            List<BudgetItem> budgetItems = budget.GetBudgetItems(start, end, false, 0);
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(start, end, isFiltered, catId);
             budgetItemsDataGrid.ItemsSource = budgetItems;
             budgetItemsDataGrid.Items.Refresh();
 
@@ -67,6 +73,7 @@ namespace WPF
             DataGridTextColumn dateCol = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(dateCol);
             dateCol.Binding = new Binding("Date");
+            //dateCol.Binding = BindingMode.OneWay;
             dateCol.Binding.StringFormat = "dd-MM-yyyy";
             dateCol.Header = "Date";
 
@@ -112,6 +119,76 @@ namespace WPF
             cmbCategory.ItemsSource = budget.categories.List();
         }
 
+        private void DeleteExpense_Click(object sender, RoutedEventArgs e)
+        {
+            // Only allow user to delete if the datagrid is showing all unfiltered budget items
+            if(ByMonth.IsChecked == true || ByCategory.IsChecked == true)
+            {
+                MessageBox.Show("Please uncheck all summaries in order to modify or delete a budget item. ");
+                return;
+            }
+
+            int expenseId = ((BudgetItem)budgetItemsDataGrid.SelectedItem).ExpenseID;
+            budget.expenses.Delete(expenseId);
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            budgetItemsDataGrid.ItemsSource = budgetItems;
+        }
+
+        private void ModifyExpense_Click(object sender, RoutedEventArgs e)
+        {
+            // Only allow user to modify if the datagrid is showing all unfiltered budget items
+            if (ByMonth.IsChecked == true || ByCategory.IsChecked == true)
+            {
+                MessageBox.Show("Please uncheck all summaries in order to modify or delete a budget item. ");
+                return;
+            }
+
+            int expenseId = ((BudgetItem)budgetItemsDataGrid.SelectedItem).ExpenseID;
+            Expense expense = null;
+            List<Expense> expenses = budget.expenses.List();
+            foreach(Expense exp in expenses)
+            {
+                if (exp.Id == expenseId)
+                {
+                    expense = exp;
+                }
+            }
+
+
+            ModifyExpenseWindow modifyWindow = new ModifyExpenseWindow(budget, expense);
+            modifyWindow.ShowDialog();
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            budgetItemsDataGrid.ItemsSource = budgetItems;
+
+        }
+
+        private void Modify_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Only allow user to modify if the datagrid is showing all unfiltered budget items
+            if (ByMonth.IsChecked == true || ByCategory.IsChecked == true)
+            {
+                return;
+            }
+
+            int expenseId = ((BudgetItem)budgetItemsDataGrid.SelectedItem).ExpenseID;
+            Expense expense = null;
+            List<Expense> expenses = budget.expenses.List();
+            foreach (Expense exp in expenses)
+            {
+                if (exp.Id == expenseId)
+                {
+                    expense = exp;
+                }
+            }
+
+
+            ModifyExpenseWindow modifyWindow = new ModifyExpenseWindow(budget, expense);
+            modifyWindow.ShowDialog();
+            List<BudgetItem> budgetItems = budget.GetBudgetItems(null, null, false, 0);
+            budgetItemsDataGrid.ItemsSource = budgetItems;
+
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             budget.CloseDB();
@@ -139,11 +216,11 @@ namespace WPF
                 catIdForFilter = category.Id;
 
                 // if only filter is checked
-                if (!ByMonth.IsChecked.Value && !ByCategory.IsChecked.Value)
-                {
-                    budgetItemsDataGrid.ItemsSource = budget.GetBudgetItems(null, null, isFilterChecked, catIdForFilter);
-                    return;
-                }
+                //if (!ByMonth.IsChecked.Value && !ByCategory.IsChecked.Value)
+                //{
+                //    budgetItemsDataGrid.ItemsSource = budget.GetBudgetItems(null, null, isFilterChecked, catIdForFilter);
+                //    return;
+                //}
             }
 
             // if by month and by category checkboxes are checked
@@ -167,7 +244,7 @@ namespace WPF
                 return;
             }
 
-            InitializeDataGrid(start, end);
+            InitializeDataGrid(start, end, isFilterChecked, catIdForFilter);
         }
 
         private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
@@ -192,7 +269,7 @@ namespace WPF
                 newColumn.Binding.StringFormat = "$00.00";
                 newColumn.Header = category.Description;
             }
-
+             
             DataGridTextColumn totalColumn = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(totalColumn);
             totalColumn.Binding = new Binding("[Total]");
@@ -253,5 +330,10 @@ namespace WPF
                 UpdateDataGrid(sender, e);
             }
         }
+
+
+
+
+
     }
 }
