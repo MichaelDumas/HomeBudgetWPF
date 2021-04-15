@@ -73,7 +73,7 @@
             
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" >
-                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}" />
+                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenu}"  />
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>
