@@ -33,6 +33,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2D821885FAD34DE688043EAA70459B5A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_43C806CCCD7943809EB621A82035A972"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_469C14ED1745AD5655042D849BCA9234"
         "OwnerKey" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
         "MsmSig" = "8:_UNDEFINED"
@@ -41,12 +53,6 @@
         {
         "MsmKey" = "8:_698BBF862B5FEE40EDA34FA444FA22DC"
         "OwnerKey" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6EDE7C0502214C05BB01AA02269C4775"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -81,12 +87,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CFCD6A68D7E74C60AAF25BAF75C68DAD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -101,12 +101,6 @@
         {
         "MsmKey" = "8:_FE7756351787832549BF6DF11341C170"
         "OwnerKey" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CA50D6919CDB3BF98D5AC2C8F97D0CDB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -151,6 +145,12 @@
         "OwnerKey" = "8:_B251ADA92F34E908E6E676B7A27DFD9F"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CA50D6919CDB3BF98D5AC2C8F97D0CDB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -169,6 +169,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -185,6 +201,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -243,6 +267,46 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2D821885FAD34DE688043EAA70459B5A"
+            {
+            "SourcePath" = "8:..\\bin\\Debug\\x86\\SQLite.Interop.dll"
+            "TargetName" = "8:SQLite.Interop.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_53EC312C79164336B19D70216813DB79"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43C806CCCD7943809EB621A82035A972"
+            {
+            "SourcePath" = "8:..\\favicon.ico"
+            "TargetName" = "8:favicon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_53EC312C79164336B19D70216813DB79"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_469C14ED1745AD5655042D849BCA9234"
@@ -307,26 +371,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EDE7C0502214C05BB01AA02269C4775"
-            {
-            "SourcePath" = "8:..\\HomeBudgetWPF\\favicon.ico"
-            "TargetName" = "8:favicon.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_53EC312C79164336B19D70216813DB79"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B251ADA92F34E908E6E676B7A27DFD9F"
             {
             "AssemblyRegister" = "3:1"
@@ -387,26 +431,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CFCD6A68D7E74C60AAF25BAF75C68DAD"
-            {
-            "SourcePath" = "8:..\\HomeBudgetWPF\\bin\\Debug\\x86\\SQLite.Interop.dll"
-            "TargetName" = "8:SQLite.Interop.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_53EC312C79164336B19D70216813DB79"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EC2DC3F8DB87E6143F5464D5C87D447E"
@@ -539,7 +563,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BigOof Budget Manager"
         "ProductCode" = "8:{B3FD0972-0182-45F7-B472-018C780421DD}"
-        "PackageCode" = "8:{CB6D91E9-18D2-49E4-B799-8AF5454346F1}"
+        "PackageCode" = "8:{6620FF9C-84A6-4DE0-A532-956E6A2DC45F}"
         "UpgradeCode" = "8:{34344F57-F6DC-40C1-8AC4-AFC9F579E15A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -659,7 +683,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_48CA396853D4442B828CFBA02B577CB3"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6967BBE196E645CAB589B7F7A006D49A"
             {
             "Name" = "8:BigOof Budget Manager"
             "Arguments" = "8:"
@@ -670,10 +694,10 @@
             "Target" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
             "Folder" = "8:_7CA226B8F07A47409FBC73ECF3DC39A8"
             "WorkingFolder" = "8:_53EC312C79164336B19D70216813DB79"
-            "Icon" = "8:_6EDE7C0502214C05BB01AA02269C4775"
+            "Icon" = "8:_43C806CCCD7943809EB621A82035A972"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_BDB4D1876D754959A7426969F615F322"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D9E272962B42411EB978D35C2655099E"
             {
             "Name" = "8:BigOof Budget Manager"
             "Arguments" = "8:"
@@ -684,7 +708,7 @@
             "Target" = "8:_DC141CC8F0DB42BC97151543C8BB1408"
             "Folder" = "8:_F607F32F32DE4AA09404E3249CBFCBB8"
             "WorkingFolder" = "8:_53EC312C79164336B19D70216813DB79"
-            "Icon" = "8:_6EDE7C0502214C05BB01AA02269C4775"
+            "Icon" = "8:_43C806CCCD7943809EB621A82035A972"
             "Feature" = "8:"
             }
         }
@@ -1088,7 +1112,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DC141CC8F0DB42BC97151543C8BB1408"
             {
-            "SourcePath" = "8:..\\HomeBudgetWPF\\obj\\Debug\\WPF.exe"
+            "SourcePath" = "8:..\\obj\\Debug\\WPF.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_53EC312C79164336B19D70216813DB79"
