@@ -54,6 +54,9 @@ namespace WPF
             PopulateComboBox();
 
         }
+
+        #region Initialization
+
         private void PopulateComboBox()
         {
             cmbCategory.DisplayMemberPath = "Description";
@@ -69,11 +72,12 @@ namespace WPF
             budgetItemsDataGrid.ItemsSource = budgetItems;
             budgetItemsDataGrid.Items.Refresh();
 
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
             DataGridTextColumn dateCol = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(dateCol);
             dateCol.Binding = new Binding("Date");
-            //dateCol.Binding = BindingMode.OneWay;
             dateCol.Binding.StringFormat = "dd-MM-yyyy";
             dateCol.Header = "Date";
 
@@ -92,14 +96,18 @@ namespace WPF
             amountCol.Binding = new Binding("Amount");
             amountCol.Binding.StringFormat = "$00.00";
             amountCol.Header = "Amount";
+            amountCol.CellStyle = s;
 
             DataGridTextColumn balanceCol = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(balanceCol);
             balanceCol.Binding = new Binding("Balance");
             balanceCol.Binding.StringFormat = "$00.00";
             balanceCol.Header = "Balance";
-
+            balanceCol.CellStyle = s;
         }
+        #endregion
+
+        #region Clicks
 
         private void btnAddExp_Click(object sender, RoutedEventArgs e)
         {
@@ -188,11 +196,9 @@ namespace WPF
             budgetItemsDataGrid.ItemsSource = budgetItems;
 
         }
+        #endregion
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            budget.CloseDB();
-        }
+        #region Updating
 
         private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -214,13 +220,6 @@ namespace WPF
             {
                 Category category = (Category)cmbCategory.SelectedItem;
                 catIdForFilter = category.Id;
-
-                // if only filter is checked
-                //if (!ByMonth.IsChecked.Value && !ByCategory.IsChecked.Value)
-                //{
-                //    budgetItemsDataGrid.ItemsSource = budget.GetBudgetItems(null, null, isFilterChecked, catIdForFilter);
-                //    return;
-                //}
             }
 
             // if by month and by category checkboxes are checked
@@ -249,6 +248,10 @@ namespace WPF
 
         private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
         {
+            // Right align text
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
             // reset columns, adds necessary columns and set the item source
             budgetItemsDataGrid.Columns.Clear();
 
@@ -275,12 +278,17 @@ namespace WPF
             totalColumn.Binding = new Binding("[Total]");
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
+            totalColumn.CellStyle = s;
 
             budgetItemsDataGrid.ItemsSource = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, isFilterChecked, catIdForFilter);
         }
 
         private void UpdateToByMonth(DateTime? start, DateTime? end, bool filter, int catId)
         {
+            // Right align text
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
             // reset columns, adds necessary columns and set the item source
             budgetItemsDataGrid.Columns.Clear();
 
@@ -294,13 +302,17 @@ namespace WPF
             totalColumn.Binding = new Binding("Total");
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
-
+            totalColumn.CellStyle = s;
             budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByMonth(start, end, filter, catId);
 
         }
 
         private void UpdateToByCategory(DateTime? start, DateTime? end, bool filter, int catId)
         {
+            // Right align text
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
             // reset columns, adds necessary columns and set the item source
             budgetItemsDataGrid.Columns.Clear();
 
@@ -314,6 +326,7 @@ namespace WPF
             totalColumn.Binding = new Binding("Total");
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
+            totalColumn.CellStyle = s;
 
             budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByCategory(start, end, filter, catId);
         }
@@ -331,9 +344,11 @@ namespace WPF
             }
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            budget.CloseDB();
+        }
 
-
-
-
+        #endregion
     }
 }
