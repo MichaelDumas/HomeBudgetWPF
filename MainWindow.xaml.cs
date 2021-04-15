@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Budget;
 using System.IO;
+using System.Linq;
 
 namespace WPF
 {
@@ -22,8 +15,9 @@ namespace WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private List<BudgetItem> items;
         public HomeBudget budget { get; set; }
+
         public MainWindow()
         {
             if(!File.Exists("./config.txt"))
@@ -68,8 +62,8 @@ namespace WPF
         {
             budgetItemsDataGrid.Columns.Clear();
 
-            List<BudgetItem> budgetItems = budget.GetBudgetItems(start, end, isFiltered, catId);
-            budgetItemsDataGrid.ItemsSource = budgetItems;
+            items = budget.GetBudgetItems(start, end, isFiltered, catId);
+            budgetItemsDataGrid.ItemsSource = items;
             budgetItemsDataGrid.Items.Refresh();
 
             Style s = new Style();
@@ -225,6 +219,7 @@ namespace WPF
             // if by month and by category checkboxes are checked
             if (ByMonth.IsChecked.Value && ByCategory.IsChecked.Value)
             {
+                txtSearchBox.IsReadOnly = true;
                 UpdateToBoth(start, end, isFilterChecked, catIdForFilter);
                 return;
             }
@@ -232,6 +227,7 @@ namespace WPF
             // if by month checkbox is checked
             if (ByMonth.IsChecked.Value)
             {
+                txtSearchBox.IsReadOnly = true;
                 UpdateToByMonth(start, end, isFilterChecked, catIdForFilter);
                 return;
             }
@@ -239,11 +235,14 @@ namespace WPF
             // if by category checkbox is checked
             if (ByCategory.IsChecked.Value)
             {
+                txtSearchBox.IsReadOnly = true;
                 UpdateToByCategory(start, end, isFilterChecked, catIdForFilter);
                 return;
             }
 
             InitializeDataGrid(start, end, isFilterChecked, catIdForFilter);
+            txtSearchBox.IsReadOnly = false;
+
         }
 
         private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
@@ -342,6 +341,34 @@ namespace WPF
             {
                 UpdateDataGrid(sender, e);
             }
+        }
+
+        private void SearchBox_Click(object sender, RoutedEventArgs e)
+        {
+            // Only apply function if user has entered text in the search box
+            if(budgetItemsDataGrid.ItemsSource == null)
+            {
+                return;
+            }
+
+            List<BudgetItem> filtered = new List<BudgetItem>();// = items.Where(item => item.ShortDescription.ToLower().Contains(txtSearchBox.Text.ToLower())); // to lowers ensure that the search is not case-sensitive
+
+            // Filtering a new list of budget items to match search input
+            foreach(BudgetItem item in items)
+            {
+                if (item.ShortDescription.ToLower().Contains(txtSearchBox.Text.ToLower()) || item.Amount.ToString().Equals(txtSearchBox.Text.ToLower()))
+                {
+                    filtered.Add(item);
+                }
+            }
+
+            if(filtered.Count <= 0)
+            {
+                MessageBox.Show("No Results Found.");
+                return;
+            }
+
+            budgetItemsDataGrid.ItemsSource = filtered;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

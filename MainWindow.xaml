@@ -60,6 +60,10 @@
             <TextBlock Text="© BigOof Corp. 2021" Grid.Row="4" FontSize="12"  HorizontalAlignment="Left" Margin="5"></TextBlock>
         </Grid>
 
+        <!-- Search Bar -->
+        <TextBox x:Name="txtSearchBox" Grid.Column="2" Height="30" Width="200" HorizontalAlignment="Right" VerticalAlignment="Bottom" ></TextBox>
+        <Button x:Name="btnSearch" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SearchBox_Click">Search</Button>
+
         <!-- Budget Items Data Grid -->
         <DataGrid x:Name="budgetItemsDataGrid" IsReadOnly="True" BorderBrush="Black" BorderThickness="3" CanUserAddRows="false" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" MouseDoubleClick="Modify_MouseDoubleClick">
             <DataGrid.Resources>
