@@ -55,7 +55,7 @@ namespace WPF
         }
 
         //This method validates expense with the ValidExpense method and updates the expense if the input is valid
-        private void btnModify_Click(object sender, RoutedEventArgs e)
+        private void btnModify_Click(object sender, RosutedEventArgs e)
         {
             if(ValidExpense())
             {
