@@ -350,5 +350,47 @@ namespace WPF
         }
 
         #endregion
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            int idx = budgetItemsDataGrid.SelectedIndex;
+            List<BudgetItem> list = (List<BudgetItem>) budgetItemsDataGrid.ItemsSource;
+
+            //set it to 0 if negative else set it to i + 1
+            int c = idx + 1 > 0 ? idx + 1 : 0;
+
+            for (int i = c; i < list.Count(); i++)
+            {
+                if(list[i].ShortDescription.Contains(txtSearch.Text))
+                {
+                    budgetItemsDataGrid.SelectedIndex = i;
+                    budgetItemsDataGrid.Focus();
+                    return;
+                }
+            }
+
+            //second for loop to wrap
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (list[i].ShortDescription.Contains(txtSearch.Text))
+                {
+                    budgetItemsDataGrid.SelectedIndex = i;
+                    budgetItemsDataGrid.Focus();
+                    return;
+                }
+            }
+
+            MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            dpStart.SelectedDate = null;
+            dpEnd.SelectedDate = null;
+            filter.IsChecked = false;
+            cmbCategory.SelectedIndex = 1;
+            ByMonth.IsChecked = false;
+            ByCategory.IsChecked = false;
+        }
     }
 }
