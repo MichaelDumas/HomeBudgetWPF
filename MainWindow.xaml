@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
+        Title="MainWindow" MinHeight="600" MinWidth="1000" Height="600" Width="1000"
         Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,6 +16,10 @@
             <RowDefinition/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
+
+        <TextBox x:Name="txtSearch" Grid.Column="1" Text="Enter txt here ..."  VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="15" Margin="45 0" Width="150"/>
+        <Button x:Name="btnSearch" Click="btnSearch_Click" Content="Search" Grid.Column="1" Height="23" Width="45" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+        
         <TextBlock Text="HomeBudget" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 
 
@@ -52,8 +56,9 @@
             </GroupBox>
 
             <StackPanel Grid.Row="3" VerticalAlignment="Top">
-                <Button x:Name="btnAddCat" FontSize="15" Width="200" Margin="0 10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10" Click="btnAddCat_Click">Add Category</Button>
-                <Button x:Name="btnAddExp" FontSize="15" Width="200" Margin="0 10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10" Click="btnAddExp_Click">Add Expense</Button>
+                <Button x:Name="btnClear" FontSize="15" Width="200" Margin="0 10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Click="btnClear_Click">Clear All Filters</Button>
+                <Button x:Name="btnAddCat" FontSize="15" Width="200" Margin="0 10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Click="btnAddCat_Click">Add Category</Button>
+                <Button x:Name="btnAddExp" FontSize="15" Width="200" Margin="0 10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Click="btnAddExp_Click">Add Expense</Button>
             </StackPanel>
 
             

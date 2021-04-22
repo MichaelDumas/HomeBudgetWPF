@@ -60,6 +60,9 @@ namespace WPF
 
         private void InitializeDataGrid(DateTime? start = null, DateTime? end = null, bool isFiltered = false, int catId = -1)
         {
+            btnSearch.IsEnabled = true;
+            txtSearch.IsEnabled = true;
+
             budgetItemsDataGrid.Columns.Clear();
 
             items = budget.GetBudgetItems(start, end, isFiltered, catId);
@@ -247,6 +250,9 @@ namespace WPF
 
         private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
         {
+            btnSearch.IsEnabled = false;
+            txtSearch.IsEnabled = false;
+
             // Right align text
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
@@ -284,6 +290,9 @@ namespace WPF
 
         private void UpdateToByMonth(DateTime? start, DateTime? end, bool filter, int catId)
         {
+            btnSearch.IsEnabled = false;
+            txtSearch.IsEnabled = false;
+
             // Right align text
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
@@ -308,6 +317,9 @@ namespace WPF
 
         private void UpdateToByCategory(DateTime? start, DateTime? end, bool filter, int catId)
         {
+            btnSearch.IsEnabled = false;
+            txtSearch.IsEnabled = false;
+
             // Right align text
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
@@ -377,5 +389,50 @@ namespace WPF
         }
 
         #endregion
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            int idx = budgetItemsDataGrid.SelectedIndex;
+            List<BudgetItem> list = (List<BudgetItem>) budgetItemsDataGrid.ItemsSource;
+
+            //start for loop at to 0 if no index selected (idx is negative) else start at idx + 1
+            int c = idx + 1 > 0 ? idx + 1 : 0;
+
+            for (int i = c; i < list.Count(); i++)
+            {
+                if(list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
+                {
+                    budgetItemsDataGrid.SelectedIndex = i;
+                    budgetItemsDataGrid.Focus();
+                    budgetItemsDataGrid.ScrollIntoView(list[i]);
+                    return;
+                }
+            }
+
+            //second for loop to wrap
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
+                {
+                    budgetItemsDataGrid.SelectedIndex = i;
+                    budgetItemsDataGrid.Focus();
+                    budgetItemsDataGrid.ScrollIntoView(list[i]);
+                    return;
+                }
+            }
+
+            //no items found so pop up message box
+            MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            dpStart.SelectedDate = null;
+            dpEnd.SelectedDate = null;
+            filter.IsChecked = false;
+            cmbCategory.SelectedIndex = 1;
+            ByMonth.IsChecked = false;
+            ByCategory.IsChecked = false;
+        }
     }
 }
