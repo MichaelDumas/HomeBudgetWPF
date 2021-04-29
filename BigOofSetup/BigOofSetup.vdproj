@@ -33,12 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2D821885FAD34DE688043EAA70459B5A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_43C806CCCD7943809EB621A82035A972"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -208,6 +202,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -267,26 +269,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2D821885FAD34DE688043EAA70459B5A"
-            {
-            "SourcePath" = "8:..\\bin\\Debug\\x86\\SQLite.Interop.dll"
-            "TargetName" = "8:SQLite.Interop.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_53EC312C79164336B19D70216813DB79"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43C806CCCD7943809EB621A82035A972"
@@ -1112,7 +1094,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DC141CC8F0DB42BC97151543C8BB1408"
             {
-            "SourcePath" = "8:..\\obj\\Debug\\WPF.exe"
+            "SourcePath" = "8:..\\obj\\Release\\WPF.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_53EC312C79164336B19D70216813DB79"
