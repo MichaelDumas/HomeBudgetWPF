@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF.csproj", "{45AC0
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BigOofSetup", "BigOofSetup\BigOofSetup.vdproj", "{1F4C4DF1-6388-4789-B924-8B8FA44B7338}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetUnitTest", "HomeBudgetUnitTest\HomeBudgetUnitTest.csproj", "{9BEAB3EA-2A6F-4B3D-8564-5CAC1AD4E0CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1F4C4DF1-6388-4789-B924-8B8FA44B7338}.Debug|Any CPU.Build.0 = Debug
 		{1F4C4DF1-6388-4789-B924-8B8FA44B7338}.Release|Any CPU.ActiveCfg = Release
 		{1F4C4DF1-6388-4789-B924-8B8FA44B7338}.Release|Any CPU.Build.0 = Release
+		{9BEAB3EA-2A6F-4B3D-8564-5CAC1AD4E0CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BEAB3EA-2A6F-4B3D-8564-5CAC1AD4E0CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BEAB3EA-2A6F-4B3D-8564-5CAC1AD4E0CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BEAB3EA-2A6F-4B3D-8564-5CAC1AD4E0CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
