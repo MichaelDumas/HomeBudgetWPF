@@ -57,8 +57,8 @@ jobs:
 
     env:
       Solution_Name: WPF.sln                    # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Directory: UnitTestProject1
-      Test_Project_Name: UnitTestProject1
+      Test_Project_Directory: HomeBudgetUnitTest
+      Test_Project_Name: HomeBudgetUnitTest
       Setup_Project_Directory: BigOofSetup
       Setup_Project_Name: BigOofSetup.vdproj
     
