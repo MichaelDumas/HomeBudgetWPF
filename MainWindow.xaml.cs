@@ -1,29 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Budget;
 using System.IO;
-
+using System.Linq;
 namespace WPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : IDataView
     {
-
+        private List<object> dataSource;
+        private List<BudgetItem> items;
+        private DataPresenter presenter;
         public HomeBudget budget { get; set; }
+
+
+        public DataPresenter Presenter 
+        {
+            get { return presenter; }
+            set { presenter = value; }
+        }
+        public List<object> DataSource 
+        {
+            get { return dataSource; }
+            set { dataSource = value; }
+
+        }
+
+        DataPresenter IDataView.presenter { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public MainWindow()
         {
             if(!File.Exists("./config.txt"))
@@ -49,8 +59,9 @@ namespace WPF
                 budget = open.budget;            
             }
 
+            presenter = new DataPresenter(this, budget);
             InitializeComponent();
-            InitializeDataGrid();
+            InitializeStandardDisplay();
             PopulateComboBox();
 
         }
@@ -64,50 +75,6 @@ namespace WPF
             cmbCategory.SelectedIndex = 1;
         }
 
-        private void InitializeDataGrid(DateTime? start = null, DateTime? end = null, bool isFiltered = false, int catId = -1)
-        {
-            btnSearch.IsEnabled = true;
-            txtSearch.IsEnabled = true;
-
-            budgetItemsDataGrid.Columns.Clear();
-
-            List<BudgetItem> budgetItems = budget.GetBudgetItems(start, end, isFiltered, catId);
-            budgetItemsDataGrid.ItemsSource = budgetItems;
-            budgetItemsDataGrid.Items.Refresh();
-
-            Style s = new Style();
-            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
-
-            DataGridTextColumn dateCol = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(dateCol);
-            dateCol.Binding = new Binding("Date");
-            dateCol.Binding.StringFormat = "dd-MM-yyyy";
-            dateCol.Header = "Date";
-
-            DataGridTextColumn catCol = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(catCol);
-            catCol.Binding = new Binding("Category");
-            catCol.Header = "Category";
-
-            DataGridTextColumn descCol = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(descCol);
-            descCol.Binding = new Binding("ShortDescription");
-            descCol.Header = "Description";
-
-            DataGridTextColumn amountCol = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(amountCol);
-            amountCol.Binding = new Binding("Amount");
-            amountCol.Binding.StringFormat = "$00.00";
-            amountCol.Header = "Amount";
-            amountCol.CellStyle = s;
-
-            DataGridTextColumn balanceCol = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(balanceCol);
-            balanceCol.Binding = new Binding("Balance");
-            balanceCol.Binding.StringFormat = "$00.00";
-            balanceCol.Header = "Balance";
-            balanceCol.CellStyle = s;
-        }
         #endregion
 
         #region Clicks
@@ -199,6 +166,46 @@ namespace WPF
             budgetItemsDataGrid.ItemsSource = budgetItems;
 
         }
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            int idx = budgetItemsDataGrid.SelectedIndex;
+            List<BudgetItem> list = (List<BudgetItem>)budgetItemsDataGrid.ItemsSource;
+
+            //start for loop at to 0 if no index selected (idx is negative) else start at idx + 1
+            int c = idx + 1 > 0 ? idx + 1 : 0;
+
+            for (int i = c; i < list.Count(); i++)
+            {
+                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
+                {
+                    ResetFocusAfterUpdate(i);
+                    return;
+                }
+            }
+
+            //second for loop to wrap
+            for (int i = 0; i < list.Count(); i++)
+            {
+                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
+                {
+                    ResetFocusAfterUpdate(i);
+                    return;
+                }
+            }
+
+            //no items found so pop up message box
+            MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            dpStart.SelectedDate = null;
+            dpEnd.SelectedDate = null;
+            filter.IsChecked = false;
+            cmbCategory.SelectedIndex = 1;
+            ByMonth.IsChecked = false;
+            ByCategory.IsChecked = false;
+        }
         #endregion
 
         #region Updating
@@ -228,71 +235,171 @@ namespace WPF
             // if by month and by category checkboxes are checked
             if (ByMonth.IsChecked.Value && ByCategory.IsChecked.Value)
             {
-                UpdateToBoth(start, end, isFilterChecked, catIdForFilter);
+                txtSearch.IsReadOnly = true;
+                //UpdateToBoth(start, end, isFilterChecked, catIdForFilter);
+                InitializeByCategoryAndMonthDisplay(presenter.GetCategoryDescriptions());
                 return;
             }
 
             // if by month checkbox is checked
             if (ByMonth.IsChecked.Value)
             {
-                UpdateToByMonth(start, end, isFilterChecked, catIdForFilter);
+                txtSearch.IsReadOnly = true;
+                InitializeByMonthDisplay();
                 return;
             }
 
             // if by category checkbox is checked
             if (ByCategory.IsChecked.Value)
             {
-                UpdateToByCategory(start, end, isFilterChecked, catIdForFilter);
+                txtSearch.IsReadOnly = true;
+                InitializeByCategoryDisplay();
                 return;
             }
 
-            InitializeDataGrid(start, end, isFilterChecked, catIdForFilter);
+            InitializeStandardDisplay();
+            txtSearch.IsReadOnly = false;
+
         }
 
-        private void UpdateToBoth(DateTime? start, DateTime? end, bool isFilterChecked, int catIdForFilter)
-        {
-            btnSearch.IsEnabled = false;
-            txtSearch.IsEnabled = false;
 
-            // Right align text
+        private void dpSelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // message pops up if start date is after end date and datagrid doesn't update
+            if(dpStart.SelectedDate.HasValue && dpEnd.SelectedDate.HasValue && (dpStart.SelectedDate.Value > dpEnd.SelectedDate.Value))
+            {
+                MessageBox.Show("End date cannot be after start date \nTable not updated \nEnter a valid start and end date to update the table", "INVALID DATES", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                UpdateDataGrid(sender, e);
+            }
+        }
+
+        private void SearchBox_Click(object sender, RoutedEventArgs e)
+        {
+            // Only apply function if user has entered text in the search box
+            if(budgetItemsDataGrid.ItemsSource == null)
+            {
+                return;
+            }
+
+            List<BudgetItem> filtered = new List<BudgetItem>();// = items.Where(item => item.ShortDescription.ToLower().Contains(txtSearchBox.Text.ToLower())); // to lowers ensure that the search is not case-sensitive
+
+            // Filtering a new list of budget items to match search input
+            foreach(BudgetItem item in items)
+            {
+                if (item.ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || item.Amount.ToString().Equals(txtSearch.Text.ToLower()))
+                {
+                    filtered.Add(item);
+                }
+            }
+
+            if(filtered.Count <= 0)
+            {
+                MessageBox.Show("No Results Found.");
+                return;
+            }
+
+            budgetItemsDataGrid.ItemsSource = filtered;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            budget.CloseDB();
+        }
+
+        #endregion
+
+        #region Interface
+        public void ResetFocusAfterUpdate(int itemIndex)
+        {
+            List<BudgetItem> list = (List<BudgetItem>)budgetItemsDataGrid.ItemsSource;
+
+            budgetItemsDataGrid.SelectedIndex = itemIndex;
+            budgetItemsDataGrid.Focus();
+            budgetItemsDataGrid.ScrollIntoView(list[itemIndex]);
+        }
+
+        public void DataClear()
+        {
+            budgetItemsDataGrid.Columns.Clear();
+        }
+
+        public void InitializeStandardDisplay()
+        {
+
+            DateTime? start = dpStart.SelectedDate;
+            DateTime? end = dpEnd.SelectedDate;
+            bool isFilterChecked = filter.IsChecked.Value;
+            int catIdForFilter = -1;
+
+            if (isFilterChecked)
+            {
+                Category category = (Category)cmbCategory.SelectedItem;
+                catIdForFilter = category.Id;
+            }
+
+            btnSearch.IsEnabled = true;
+            txtSearch.IsEnabled = true;
+
+            budgetItemsDataGrid.Columns.Clear();
+
+            presenter.GetStandardDisplayValues(start, end, isFilterChecked, catIdForFilter);
+
+            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItem>().ToList();
+            budgetItemsDataGrid.Items.Refresh();
+
+
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
-            // reset columns, adds necessary columns and set the item source
-            budgetItemsDataGrid.Columns.Clear();
+            DataGridTextColumn dateCol = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(dateCol);
+            dateCol.Binding = new Binding("Date");
+            dateCol.Binding.StringFormat = "dd-MM-yyyy";
+            dateCol.Header = "Date";
 
-            DataGridTextColumn monthColumn = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(monthColumn);
-            monthColumn.Binding = new Binding("[Month]");
-            monthColumn.Header = "Month";
+            DataGridTextColumn catCol = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(catCol);
+            catCol.Binding = new Binding("Category");
+            catCol.Header = "Category";
 
-            // freeze the first column
-            budgetItemsDataGrid.FrozenColumnCount = 1;
+            DataGridTextColumn descCol = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(descCol);
+            descCol.Binding = new Binding("ShortDescription");
+            descCol.Header = "Description";
 
-            // loop through the categories and add a column for each one
-            foreach (Category category in budget.categories.List())
-            {
-                DataGridTextColumn newColumn = new DataGridTextColumn();
-                budgetItemsDataGrid.Columns.Add(newColumn);
-                newColumn.Binding = new Binding("[" + category.Description + "]");
-                newColumn.Binding.StringFormat = "$00.00";
-                newColumn.Header = category.Description;
-            }
-             
-            DataGridTextColumn totalColumn = new DataGridTextColumn();
-            budgetItemsDataGrid.Columns.Add(totalColumn);
-            totalColumn.Binding = new Binding("[Total]");
-            totalColumn.Binding.StringFormat = "$00.00";
-            totalColumn.Header = "Total";
-            totalColumn.CellStyle = s;
+            DataGridTextColumn amountCol = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(amountCol);
+            amountCol.Binding = new Binding("Amount");
+            amountCol.Binding.StringFormat = "$00.00";
+            amountCol.Header = "Amount";
+            amountCol.CellStyle = s;
 
-            budgetItemsDataGrid.ItemsSource = budget.GetBudgetDictionaryByCategoryAndMonth(start, end, isFilterChecked, catIdForFilter);
+            DataGridTextColumn balanceCol = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(balanceCol);
+            balanceCol.Binding = new Binding("Balance");
+            balanceCol.Binding.StringFormat = "$00.00";
+            balanceCol.Header = "Balance";
+            balanceCol.CellStyle = s;
         }
 
-        private void UpdateToByMonth(DateTime? start, DateTime? end, bool filter, int catId)
+        public void InitializeByMonthDisplay()
         {
+            DateTime? start = dpStart.SelectedDate;
+            DateTime? end = dpEnd.SelectedDate;
+            bool isFilterChecked = filter.IsChecked.Value;
+            int catIdForFilter = -1;
             btnSearch.IsEnabled = false;
             txtSearch.IsEnabled = false;
+
+            if (isFilterChecked)
+            {
+                Category category = (Category)cmbCategory.SelectedItem;
+                catIdForFilter = category.Id;
+            }
+            presenter.GetByMonthDisplayValues(start, end, isFilterChecked, catIdForFilter);
 
             // Right align text
             Style s = new Style();
@@ -312,14 +419,25 @@ namespace WPF
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
             totalColumn.CellStyle = s;
-            budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByMonth(start, end, filter, catId);
+            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItemsByMonth>().ToList();
 
         }
 
-        private void UpdateToByCategory(DateTime? start, DateTime? end, bool filter, int catId)
+        public void InitializeByCategoryDisplay()
         {
+            DateTime? start = dpStart.SelectedDate;
+            DateTime? end = dpEnd.SelectedDate;
+            bool isFilterChecked = filter.IsChecked.Value;
+            int catIdForFilter = -1;
             btnSearch.IsEnabled = false;
             txtSearch.IsEnabled = false;
+
+            if (isFilterChecked)
+            {
+                Category category = (Category)cmbCategory.SelectedItem;
+                catIdForFilter = category.Id;
+            }
+            presenter.GetByCategoryDisplayValues(start, end, isFilterChecked, catIdForFilter);
 
             // Right align text
             Style s = new Style();
@@ -339,73 +457,58 @@ namespace WPF
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
             totalColumn.CellStyle = s;
-
-            budgetItemsDataGrid.ItemsSource = budget.GetBudgetItemsByCategory(start, end, filter, catId);
+            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItemsByCategory>().ToList();
         }
 
-        private void dpSelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        public void InitializeByCategoryAndMonthDisplay(List<string> usedCategoryList)
         {
-            // message pops up if start date is after end date and datagrid doesn't update
-            if(dpStart.SelectedDate.HasValue && dpEnd.SelectedDate.HasValue && (dpStart.SelectedDate.Value > dpEnd.SelectedDate.Value))
-            {
-                MessageBox.Show("End date cannot be after start date \nTable not updated \nEnter a valid start and end date to update the table", "INVALID DATES", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                UpdateDataGrid(sender, e);
-            }
-        }
+            DateTime? start = dpStart.SelectedDate;
+            DateTime? end = dpEnd.SelectedDate;
+            bool isFilterChecked = filter.IsChecked.Value;
+            int catIdForFilter = -1;
+            btnSearch.IsEnabled = false;
+            txtSearch.IsEnabled = false;
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            budget.CloseDB();
-        }
+            if (isFilterChecked)
+            {
+                Category category = (Category)cmbCategory.SelectedItem;
+                catIdForFilter = category.Id;
+            }
+            presenter.GetByMonthAndCategoryDisplayValues(start, end, isFilterChecked, catIdForFilter);
 
+            // Right align text
+            Style s = new Style();
+            s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
+
+            // reset columns, adds necessary columns and set the item source
+            budgetItemsDataGrid.Columns.Clear();
+
+            DataGridTextColumn monthColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(monthColumn);
+            monthColumn.Binding = new Binding("[Month]");
+            monthColumn.Header = "Month";
+
+            // freeze the first column
+            budgetItemsDataGrid.FrozenColumnCount = 1;
+
+            // loop through the categories and add a column for each one
+            foreach (String desc in presenter.GetCategoryDescriptions())
+            {
+                DataGridTextColumn newColumn = new DataGridTextColumn();
+                budgetItemsDataGrid.Columns.Add(newColumn);
+                newColumn.Binding = new Binding("[" + desc + "]");
+                newColumn.Binding.StringFormat = "$00.00";
+                newColumn.Header = desc;
+            }
+
+            DataGridTextColumn totalColumn = new DataGridTextColumn();
+            budgetItemsDataGrid.Columns.Add(totalColumn);
+            totalColumn.Binding = new Binding("[Total]");
+            totalColumn.Binding.StringFormat = "$00.00";
+            totalColumn.Header = "Total";
+            totalColumn.CellStyle = s;
+            budgetItemsDataGrid.ItemsSource = DataSource.Cast<Dictionary<string, object>>().ToList();
+        }
         #endregion
-
-        private void btnSearch_Click(object sender, RoutedEventArgs e)
-        {
-            int idx = budgetItemsDataGrid.SelectedIndex;
-            List<BudgetItem> list = (List<BudgetItem>) budgetItemsDataGrid.ItemsSource;
-
-            //start for loop at to 0 if no index selected (idx is negative) else start at idx + 1
-            int c = idx + 1 > 0 ? idx + 1 : 0;
-
-            for (int i = c; i < list.Count(); i++)
-            {
-                if(list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
-                {
-                    budgetItemsDataGrid.SelectedIndex = i;
-                    budgetItemsDataGrid.Focus();
-                    budgetItemsDataGrid.ScrollIntoView(list[i]);
-                    return;
-                }
-            }
-
-            //second for loop to wrap
-            for (int i = 0; i < list.Count(); i++)
-            {
-                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
-                {
-                    budgetItemsDataGrid.SelectedIndex = i;
-                    budgetItemsDataGrid.Focus();
-                    budgetItemsDataGrid.ScrollIntoView(list[i]);
-                    return;
-                }
-            }
-
-            //no items found so pop up message box
-            MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
-        }
-
-        private void btnClear_Click(object sender, RoutedEventArgs e)
-        {
-            dpStart.SelectedDate = null;
-            dpEnd.SelectedDate = null;
-            filter.IsChecked = false;
-            cmbCategory.SelectedIndex = 1;
-            ByMonth.IsChecked = false;
-            ByCategory.IsChecked = false;
-        }
     }
 }

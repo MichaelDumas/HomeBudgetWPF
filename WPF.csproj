@@ -81,6 +81,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataPresenter.cs" />
+    <Compile Include="IDataView.cs" />
     <Compile Include="ModifyExpenseWindow.xaml.cs">
       <DependentUpon>ModifyExpenseWindow.xaml</DependentUpon>
     </Compile>
