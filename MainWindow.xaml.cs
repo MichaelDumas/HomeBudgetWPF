@@ -168,33 +168,12 @@ namespace WPF
         }
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            int idx = budgetItemsDataGrid.SelectedIndex;
-            List<BudgetItem> list = (List<BudgetItem>)budgetItemsDataGrid.ItemsSource;
-
-            //start for loop at to 0 if no index selected (idx is negative) else start at idx + 1
-            int c = idx + 1 > 0 ? idx + 1 : 0;
-
-            for (int i = c; i < list.Count(); i++)
+            if(!presenter.Search(budgetItemsDataGrid.SelectedIndex, txtSearch.Text))
             {
-                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
-                {
-                    ResetFocusAfterUpdate(i);
-                    return;
-                }
+                //no items found so pop up message box
+                MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
             }
 
-            //second for loop to wrap
-            for (int i = 0; i < list.Count(); i++)
-            {
-                if (list[i].ShortDescription.ToLower().Contains(txtSearch.Text.ToLower()) || list[i].Amount.ToString().Contains((txtSearch.Text)))
-                {
-                    ResetFocusAfterUpdate(i);
-                    return;
-                }
-            }
-
-            //no items found so pop up message box
-            MessageBox.Show("No items found", "NO RESULTS", MessageBoxButton.OK);
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -314,7 +293,7 @@ namespace WPF
         #region Interface
         public void ResetFocusAfterUpdate(int itemIndex)
         {
-            List<BudgetItem> list = (List<BudgetItem>)budgetItemsDataGrid.ItemsSource;
+            List<object> list = (List<object>)budgetItemsDataGrid.ItemsSource;
 
             budgetItemsDataGrid.SelectedIndex = itemIndex;
             budgetItemsDataGrid.Focus();
@@ -347,7 +326,7 @@ namespace WPF
 
             presenter.GetStandardDisplayValues(start, end, isFilterChecked, catIdForFilter);
 
-            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItem>().ToList();
+            budgetItemsDataGrid.ItemsSource = DataSource;
             budgetItemsDataGrid.Items.Refresh();
 
 
@@ -405,8 +384,6 @@ namespace WPF
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
-            // reset columns, adds necessary columns and set the item source
-            budgetItemsDataGrid.Columns.Clear();
 
             DataGridTextColumn monthColumn = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(monthColumn);
@@ -419,7 +396,7 @@ namespace WPF
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
             totalColumn.CellStyle = s;
-            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItemsByMonth>().ToList();
+            budgetItemsDataGrid.ItemsSource = DataSource;
 
         }
 
@@ -443,8 +420,6 @@ namespace WPF
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
-            // reset columns, adds necessary columns and set the item source
-            budgetItemsDataGrid.Columns.Clear();
 
             DataGridTextColumn categoryTotal = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(categoryTotal);
@@ -457,7 +432,7 @@ namespace WPF
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
             totalColumn.CellStyle = s;
-            budgetItemsDataGrid.ItemsSource = DataSource.Cast<BudgetItemsByCategory>().ToList();
+            budgetItemsDataGrid.ItemsSource = DataSource;
         }
 
         public void InitializeByCategoryAndMonthDisplay(List<string> usedCategoryList)
@@ -480,8 +455,6 @@ namespace WPF
             Style s = new Style();
             s.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
 
-            // reset columns, adds necessary columns and set the item source
-            budgetItemsDataGrid.Columns.Clear();
 
             DataGridTextColumn monthColumn = new DataGridTextColumn();
             budgetItemsDataGrid.Columns.Add(monthColumn);
@@ -507,7 +480,7 @@ namespace WPF
             totalColumn.Binding.StringFormat = "$00.00";
             totalColumn.Header = "Total";
             totalColumn.CellStyle = s;
-            budgetItemsDataGrid.ItemsSource = DataSource.Cast<Dictionary<string, object>>().ToList();
+            budgetItemsDataGrid.ItemsSource = DataSource;
         }
         #endregion
     }
