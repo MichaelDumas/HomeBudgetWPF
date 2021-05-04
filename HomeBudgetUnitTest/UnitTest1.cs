@@ -10,6 +10,8 @@ namespace HomeBudgetUnitTest
     [TestClass]
     public class UnitTest1
     {
+        public string fileName = "../../testDBInput.db";
+
         public class TestDataView : IDataView
         {
             public bool isCleared = false;
@@ -78,7 +80,7 @@ namespace HomeBudgetUnitTest
         public void Test_GetStandardDisplayValues()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
 
@@ -94,7 +96,7 @@ namespace HomeBudgetUnitTest
         public void Test_GetByMonthDisplayValues()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
 
@@ -110,7 +112,7 @@ namespace HomeBudgetUnitTest
         public void Test_GetByCategoryDisplayValues()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
 
@@ -126,7 +128,7 @@ namespace HomeBudgetUnitTest
         public void Test_GetByMonthAndCategoryDisplayValues()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
 
@@ -142,7 +144,7 @@ namespace HomeBudgetUnitTest
         public void Test_GetCategoryDescriptions()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
 
@@ -158,7 +160,7 @@ namespace HomeBudgetUnitTest
         public void Test_Search()
         {
             //Arrange
-            HomeBudget model = new HomeBudget("./testDBInput.db", false);
+            HomeBudget model = new HomeBudget(fileName, false);
             TestDataView view = new TestDataView();
             DataPresenter presenter = new DataPresenter(view, model);
             presenter.GetStandardDisplayValues(null, null, false, -1);
