@@ -35,6 +35,7 @@ namespace HomeBudgetUnitTest
 
             public TestDataView()
             {
+                // empty constructor
             }
 
             public List<object> getDataSource()
