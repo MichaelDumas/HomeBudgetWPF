@@ -70,7 +70,13 @@
         <Button x:Name="btnSearch" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SearchBox_Click">Search</Button>
 -->
         <!-- Budget Items Data Grid -->
-        <DataGrid x:Name="budgetItemsDataGrid" IsReadOnly="True" BorderBrush="Black" BorderThickness="3" CanUserAddRows="false" AutoGenerateColumns="False" AlternatingRowBackground = "LightBlue" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" >
+        <local:DataChartControl x:Name="budgetItemsDataGrid" BorderBrush="Black"  BorderThickness="3"
+                                 Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3"/>
+        <DataGrid x:Name="budgetItemsDataGrid2" IsReadOnly="True" BorderBrush="Black" BorderThickness="3" 
+                  CanUserAddRows="false" 
+                  AutoGenerateColumns="False" 
+                  AlternatingRowBackground = "LightBlue" 
+                  Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="1" Grid.RowSpan="3" Visibility="Hidden" >
             <DataGrid.Resources>
                 <ContextMenu x:Key="ContextMenu" x:Name="Context" >
                     <MenuItem x:Name="menuDelete" Header="Delete" Click="DeleteExpense_Click"  />

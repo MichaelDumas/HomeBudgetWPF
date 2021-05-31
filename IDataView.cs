@@ -17,5 +17,7 @@ namespace WPF
         void InitializeByCategoryDisplay();
         void InitializeByCategoryAndMonthDisplay(
         List<String> usedCategoryList);
+        object DataSelectedItem { get; set; }
+        int DataSelectedIndex { get; set; }
     }
 }
